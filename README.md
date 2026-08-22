@@ -6,12 +6,25 @@ It handles **products, categories, units and product variants** out of the box.
 > You don't need to know Python to run this. One script does everything.
 
 ---
+## Manual Setup (if you prefer)
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env            # then edit SECRET_KEY
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+
 
 ## Quick Start (one command)
 
 ```bash
 git clone https://github.com/suyog123-hub/suyog-d.git
-cd suyog-d
+cd ims
 ./setup.sh
 ```
 
@@ -111,17 +124,7 @@ ims/
 └── manage.py             # Django CLI entry point
 ```
 
-## Manual Setup (if you prefer)
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env            # then edit SECRET_KEY
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-```
 
 ## Environment Variables
 
