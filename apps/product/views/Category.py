@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.filters import OrderingFilter, SearchFilter
 
 from apps.product.models.Category import Category
-from apps.product.serializer.Category import CategorySerializer
+from apps.product.serializer.CategorySerializer import CategorySerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

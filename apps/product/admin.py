@@ -21,7 +21,8 @@ class UnitAdmin(admin.ModelAdmin):
 class ProductVariantInline(admin.TabularInline):
     model = ProductVariant
     extra = 1
-    fields = ("name", "cost_price", "selling_price", "is_active")
+    fields = ("name", "cost_price", "discount_percentage", "selling_price", "is_active")
+    readonly_fields = ("selling_price",)
 
 
 @admin.register(Product)
@@ -39,7 +40,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ("is_active", "category", "unit")
     search_fields = ("name", "slug")
     ordering = ("name",)
-    readonly_fields = ("slug", "created_at", "updated_at")
+    readonly_fields = ("slug", "selling_price", "created_at", "updated_at")
     inlines = [ProductVariantInline]
 
 
@@ -56,3 +57,4 @@ class ProductVariantAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_active", "product")
     search_fields = ("name", "product__name")
+    readonly_fields = ("selling_price",)

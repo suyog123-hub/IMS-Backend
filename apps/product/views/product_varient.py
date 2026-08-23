@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.filters import OrderingFilter, SearchFilter
 
 from apps.product.models.product_varient import ProductVariant
-from apps.product.serializer.product_varient import ProductVariantSerializer
+from apps.product.serializer.product_varient_serializer import ProductVariantSerializer
 
 
 class ProductVariantViewSet(viewsets.ModelViewSet):

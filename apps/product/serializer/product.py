@@ -1,64 +1,61 @@
 from rest_framework import serializers
 from apps.product.models.product import Product
-from apps.product.serializer.Category import CategorySerializer
-from apps.product.serializer.Unit import UnitSerializer
-
-
 class ProductSerializer(serializers.ModelSerializer):
-    category_detail = CategorySerializer(source="category", read_only=True)
-    unit_detail = UnitSerializer(source="unit", read_only=True)
-    variants = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
+    # integer format ma dekhauxa so string format ma chagne garna ko lagi 
+    category_name = serializers.CharField(source="category.name", read_only=True)
+    unit_name = serializers.CharField(source="unit.name", read_only=True)
     class Meta:
         model = Product
         fields = [
             "id",
             "category",
-            "category_detail",
+             "unit",
+            "category_name",
+            "unit_name",
             "name",
             "slug",
-            "unit",
-            "unit_detail",
             "quantity",
-            "decription",
+            "cost_price",
+            "discount_percentage",
+            "selling_price",
+            "description",
             "is_active",
-            "variants",
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "slug", "created_at", "updated_at"]
+        
+        read_only_fields = ["slug", "selling_price"]
 
+    def get_final_price(self, obj):
+        return obj.selling_price
 
-class ProductDetailSerializer(ProductSerializer):
-    variants = serializers.SerializerMethodField()
+    def get_discount_amount(self, obj):
+        if obj.cost_price is None or obj.selling_price is None:
+            return None
+        return obj.cost_price - obj.selling_price
 
-    class Meta:
-        model = Product
-        fields = [
-            "id",
-            "category",
-            "category_detail",
-            "name",
-            "slug",
-            "unit",
-            "unit_detail",
-            "quantity",
-            "decription",
-            "is_active",
-            "variants",
-            "created_at",
-            "updated_at",
-        ]
-        read_only_fields = ["id", "slug", "created_at", "updated_at"]
+    def get_is_discounted(self, obj):
+        return obj.discount_percentage is not None and obj.discount_percentage > 0
 
-    def get_variants(self, obj):
-        return [
-            {
-                "id": v.id,
-                "name": v.name,
-                "cost_price": v.cost_price,
-                "selling_price": v.selling_price,
-                "is_active": v.is_active,
-            }
-            for v in obj.variants.all()
-        ]
+    def validate_name(self, value):
+        if len(value) < 2:
+            raise serializers.ValidationError("Name must be at least 2 characters long.")
+        return value
+
+    def validate_quantity(self, value):
+        if value < 0:
+            raise serializers.ValidationError("Quantity cannot be negative.")
+        return value
+
+    def validate_cost_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError("Cost price cannot be negative.")
+        return value
+
+    def validate_discount_percentage(self, value):
+        if value is not None:
+            if value < 0:
+                raise serializers.ValidationError("Discount cannot be negative.")
+            if value > 100:
+                raise serializers.ValidationError("Discount cannot exceed 100%.")
+        return value
