@@ -41,11 +41,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_framework',
     'corsheaders',
-    'apps.inventory',
-    'apps.product',
     'django_ckeditor_5',
     'ckeditor_uploader',
     'drf_yasg',
+    'apps.inventory',
+    'apps.product',
+    'apps.accounts',
 ]
 
 MIDDLEWARE = [
