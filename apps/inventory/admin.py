@@ -35,14 +35,14 @@ class StockCountLineInline(admin.TabularInline):
     model = StockCountLine
     extra = 1
     fields = ("product", "variant", "system_quantity", "counted_quantity", "difference", "notes")
-    readonly_fields = ("difference",)
+    readonly_fields = ("system_quantity", "difference",)
 
 
 @admin.register(StockTransfer)
 class StockTransferAdmin(admin.ModelAdmin):
-    list_display = ("id", "reference_number", "from_location", "to_location", "status", "created_at")
+    list_display = ("id", "reference_number", "product", "quantity", "from_location", "to_location", "status", "created_at")
     list_filter = ("status",)
-    search_fields = ("reference_number",)
+    search_fields = ("reference_number", "product__name")
     ordering = ("-created_at",)
     readonly_fields = ("reference_number", "created_at", "updated_at")
 
@@ -61,4 +61,4 @@ class StockCountAdmin(admin.ModelAdmin):
 class StockCountLineAdmin(admin.ModelAdmin):
     list_display = ("id", "stock_count", "product", "variant", "system_quantity", "counted_quantity", "difference")
     search_fields = ("product__name",)
-    readonly_fields = ("difference",)
+    readonly_fields = ("system_quantity", "difference",)

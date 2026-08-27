@@ -1,13 +1,14 @@
+from decimal import Decimal
+
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator
+from django.db.models import Sum
 from apps.product.models.base import TimeStampedModel
 from apps.product.models.product import Product
 from apps.product.models.product_varient import ProductVariant
 from apps.inventory.models.stocklocation import StockLocation
 from apps.inventory.models.inventory import Inventory
-
-
 class StockMovement(TimeStampedModel):
 
     MOVEMENT_TYPES = [
@@ -24,6 +25,8 @@ class StockMovement(TimeStampedModel):
         Inventory,
         on_delete=models.PROTECT,
         related_name="movements",
+        null=True,
+        blank=True,
     )
     product = models.ForeignKey(
         Product,
@@ -81,6 +84,28 @@ class StockMovement(TimeStampedModel):
             models.Index(fields=["reference_type", "reference_id"]),
             models.Index(fields=["created_by"]),
         ]
+
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        super().save(*args, **kwargs)
+
+        if is_new:
+            inventory, _ = Inventory.objects.get_or_create(
+                product=self.product,
+                location=self.location,
+                defaults={"quantity": Decimal("0")},
+            )
+            inventory.quantity = models.F("quantity") + self.quantity_change
+            inventory.save(update_fields=["quantity", "updated_at"])
+            self.inventory = inventory
+            super().save(update_fields=["inventory"])
+
+            total = (
+                Inventory.objects.filter(product=self.product)
+                .aggregate(total=Sum("quantity"))["total"]
+                or Decimal("0")
+            )
+            Product.objects.filter(pk=self.product.pk).update(quantity=total)
 
     def __str__(self):
         direction = "+" if self.quantity_change >= 0 else ""

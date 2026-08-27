@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from django.core.validators import MinValueValidator
 from apps.product.models.base import TimeStampedModel
@@ -27,8 +29,9 @@ class StockCountLine(TimeStampedModel):
     system_quantity = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        validators=[MinValueValidator(0)],
-        help_text="Quantity the system believes is in stock",
+        default=0,
+        editable=False,
+        help_text="Auto-filled from Inventory",
     )
     counted_quantity = models.DecimalField(
         max_digits=10,
@@ -60,6 +63,15 @@ class StockCountLine(TimeStampedModel):
         ]
 
     def save(self, *args, **kwargs):
+        from apps.inventory.models.inventory import Inventory
+
+        location = self.stock_count.location
+        inventory = Inventory.objects.filter(
+            product=self.product,
+            location=location,
+        ).first()
+        self.system_quantity = inventory.quantity if inventory else Decimal("0")
+
         self.difference = self.counted_quantity - self.system_quantity
         super().save(*args, **kwargs)
 
