@@ -49,7 +49,9 @@ urlpatterns = [
     path("product/", include("apps.product.urls")),
     path("inventory/", include("apps.inventory.urls")),
 
-
+    # Frontend API routes
+    path("api/", include("apps.product.urls")),
+    path("api/inventory/", include("apps.inventory.urls")),
 
     path("api/ckeditor/", include("django_ckeditor_5.urls")),
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
