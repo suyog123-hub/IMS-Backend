@@ -75,7 +75,7 @@ class StockMovement(TimeStampedModel):
 
     class Meta:
         db_table = "stock_movements"
-        ordering = ["-created_at"]
+        ordering = ["-id"]
         indexes = [
             models.Index(fields=["product"]),
             models.Index(fields=["variant"]),

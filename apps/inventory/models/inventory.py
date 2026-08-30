@@ -11,7 +11,7 @@ class Inventory(TimeStampedModel):
 
     class Meta:
         db_table = "inventory"
-        ordering = ["-created_at"]
+        ordering = ["-id"]
         constraints = [
             models.UniqueConstraint(fields=["product", "location"], name="unique_inventory_per_product_location"),
         ]

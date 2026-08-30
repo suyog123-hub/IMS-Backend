@@ -9,26 +9,26 @@ from apps.inventory.models import (
 )
 @admin.register(StockLocation)
 class StockLocationAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "code", "location_type", "phone", "is_active", "created_at")
-    list_filter = ("is_active", "location_type")
+    list_display = ("id", "name", "code", "location_type", "phone", "is_active", "is_default", "updated_at")
+    list_filter = ("is_active", "location_type", "is_default")
     search_fields = ("name", "code")
-    ordering = ("name",)
+    ordering = ("-id",)
 
 
 @admin.register(Inventory)
 class InventoryAdmin(admin.ModelAdmin):
-    list_display = ("id", "product", "location", "quantity", "created_at")
+    list_display = ("id", "product", "location", "quantity", "updated_at")
     search_fields = ("product__name", "location__name")
-    ordering = ("-created_at",)
+    ordering = ("-id",)
 
 
 @admin.register(StockMovement)
 class StockMovementAdmin(admin.ModelAdmin):
-    list_display = ("id", "product", "location", "movement_type", "quantity_change", "created_by", "created_at")
+    list_display = ("id", "product", "location", "movement_type", "quantity_change", "created_by", "updated_at")
     list_filter = ("movement_type",)
     search_fields = ("product__name",)
-    ordering = ("-created_at",)
-    readonly_fields = ("created_at", "updated_at")
+    ordering = ("-id",)
+    readonly_fields = ("updated_at", "updated_at")
 
 
 class StockCountLineInline(admin.TabularInline):
@@ -40,20 +40,20 @@ class StockCountLineInline(admin.TabularInline):
 
 @admin.register(StockTransfer)
 class StockTransferAdmin(admin.ModelAdmin):
-    list_display = ("id", "reference_number", "product", "quantity", "from_location", "to_location", "status", "created_at")
+    list_display = ("id", "reference_number", "product", "quantity", "from_location", "to_location", "status", "updated_at")
     list_filter = ("status",)
     search_fields = ("reference_number", "product__name")
-    ordering = ("-created_at",)
-    readonly_fields = ("reference_number", "created_at", "updated_at")
+    ordering = ("-id",)
+    readonly_fields = ("reference_number", "updated_at", "updated_at")
 
 
 @admin.register(StockCount)
 class StockCountAdmin(admin.ModelAdmin):
-    list_display = ("id", "location", "status", "counted_by", "created_at")
+    list_display = ("id", "location", "status", "counted_by", "updated_at")
     list_filter = ("status",)
     search_fields = ("location__name",)
-    ordering = ("-created_at",)
-    readonly_fields = ("created_at", "updated_at")
+    ordering = ("-id",)
+    readonly_fields = ("updated_at", "updated_at")
     inlines = [StockCountLineInline]
 
 

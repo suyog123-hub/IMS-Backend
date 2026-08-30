@@ -49,7 +49,7 @@ class StockCountLine(TimeStampedModel):
 
     class Meta:
         db_table = "stock_count_lines"
-        ordering = ["id"]
+        ordering = ["-id"]
         constraints = [
             models.UniqueConstraint(
                 fields=["stock_count", "product", "variant"],

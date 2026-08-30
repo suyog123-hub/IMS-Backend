@@ -7,7 +7,7 @@ from apps.product.models import Category, Product, ProductVariant, Unit
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "created_at", "updated_at")
     search_fields = ("name",)
-    ordering = ("name",)
+    ordering = ("-id",)
 
 
 @admin.register(Unit)
@@ -15,7 +15,7 @@ class UnitAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "is_active", "created_at", "updated_at")
     list_filter = ("is_active",)
     search_fields = ("name",)
-    ordering = ("name",)
+    ordering = ("-id",)
 
 
 class ProductVariantInline(admin.TabularInline):
@@ -39,7 +39,7 @@ class ProductAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_active", "category", "unit")
     search_fields = ("name", "slug")
-    ordering = ("name",)
+    ordering = ("-id",)
     readonly_fields = ("slug", "selling_price", "created_at", "updated_at")
     inlines = [ProductVariantInline]
 

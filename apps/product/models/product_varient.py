@@ -41,7 +41,7 @@ class ProductVariant(TimeStampedModel):
 
     class Meta:
         db_table = "product_variants"
-        ordering = ["product__name", "name"]
+        ordering = ["-id"]
         indexes = [
             models.Index(fields=["product"]),
             models.Index(fields=["is_active"]),

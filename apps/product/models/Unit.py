@@ -12,7 +12,7 @@ class Unit(TimeStampedModel):
     )
     class Meta:
         db_table = "units"
-        ordering = ["name"]
+        ordering = ["-id"]
 
     def __str__(self):
         return self.name

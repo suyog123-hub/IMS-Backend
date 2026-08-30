@@ -58,7 +58,7 @@ class StockTransfer(TimeStampedModel):
 
     class Meta:
         db_table = "stock_transfers"
-        ordering = ["-created_at"]
+        ordering = ["-id"]
         indexes = [
             models.Index(fields=["reference_number"]),
             models.Index(fields=["status"]),

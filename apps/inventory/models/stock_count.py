@@ -34,7 +34,7 @@ class StockCount(TimeStampedModel):
 
     class Meta:
         db_table = "stock_counts"
-        ordering = ["-created_at"]
+        ordering = ["-id"]
         indexes = [
             models.Index(fields=["status"]),
             models.Index(fields=["location"]),

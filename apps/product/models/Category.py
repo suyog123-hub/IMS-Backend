@@ -5,7 +5,7 @@ class Category(TimeStampedModel):
     name = models.CharField(max_length=100, unique=True)
     class Meta:
         verbose_name_plural = "Categories"
-        ordering = ['name']
+        ordering = ['-id']
         indexes = [
             models.Index(fields=['name']),
         ]

@@ -35,9 +35,13 @@ class StockLocation(TimeStampedModel):
     code = models.CharField(max_length=20,unique=True,help_text="Example: WH-01, STR-02, SH-ELEC-01")
     phone = models.CharField(max_length=20, blank=True)
     is_active = models.BooleanField(default=True)
+    is_default = models.BooleanField(
+        default=False,
+        help_text="Main/primary warehouse; new products are saved here automatically.",
+    )
     class Meta:
         db_table = "stock_locations"
-        ordering = ["name"]
+        ordering = ["-id"]
         indexes = [
             models.Index(fields=["name"]),
             models.Index(fields=["code"]),

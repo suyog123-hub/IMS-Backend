@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 
 from decouple import config
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.functional import SimpleLazyObject
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +44,7 @@ if config("RENDER", default=False, cast=bool):
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -56,6 +60,7 @@ INSTALLED_APPS = [
     'apps.product',
     'apps.accounts',
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -154,6 +159,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -184,6 +190,70 @@ CKEDITOR_5_CONFIGS = {
         "table": {
             "contentToolbar": ["tableColumn", "tableRow", "mergeTableCells"],
         },
+    },
+}
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Inventory Pro Admin",
+    "site_header": "Inventory Pro",
+    "site_brand": "Inventory Pro",
+    "site_icon": "fas fa-box-open",
+    "welcome_sign": "Welcome back, Administrator",
+    "copyright": "Inventory Pro",
+    "search_model": "auth.User",
+    "show_ui_builder": False,
+    "navigation_expanded": True,
+    "order_with_respect_to": ["product", "inventory", "accounts", "auth"],
+    "icons": {
+        "auth": "fas fa-user-shield",
+        "auth.User": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "product.Product": "fas fa-box-open",
+        "product.Category": "fas fa-tags",
+        "product.Unit": "fas fa-balance-scale",
+        "product.ProductVariant": "fas fa-copy",
+        "inventory.Inventory": "fas fa-warehouse",
+        "inventory.StockLocation": "fas fa-map-marker-alt",
+        "inventory.StockMovement": "fas fa-exchange-alt",
+        "inventory.StockTransfer": "fas fa-truck-moving",
+        "inventory.StockCount": "fas fa-clipboard-list",
+        "inventory.StockCountLine": "fas fa-list-ol",
+    },
+    "default_icon_parents": "fas fa-folder",
+    "default_icon_children": "fas fa-circle",
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-white",
+    "accent": "accent-primary",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-light-white",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": True,
+    "theme": "flatly",
+    "dark_mode_theme": "darkly",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
     },
 }
 

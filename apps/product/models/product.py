@@ -60,7 +60,7 @@ class Product(TimeStampedModel):
 
     class Meta:
         db_table = "products"
-        ordering = ["name"]
+        ordering = ["-id"]
         indexes = [
             models.Index(fields=["name"]),
             models.Index(fields=["category"]),
@@ -68,16 +68,40 @@ class Product(TimeStampedModel):
         ]
 
     def save(self, *args, **kwargs):
+        is_new = self._state.adding
+
         if self.cost_price is not None:
             cost = Decimal(str(self.cost_price))
             discount = Decimal(str(self.discount_percentage or 0))
             self.selling_price = (
                 cost * (Decimal("100") - discount) / Decimal("100")
             ).quantize(Decimal("0.01"))
-            
+
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+        if is_new:
+            self._save_to_default_warehouse()
+
+    def _save_to_default_warehouse(self):
+        from apps.inventory.models import Inventory
+        from apps.inventory.models.stocklocation import StockLocation
+
+        warehouse = (
+            StockLocation.objects
+            .filter(is_default=True, is_active=True)
+            .order_by("id")
+            .first()
+        )
+        if warehouse is None:
+            return
+
+        Inventory.objects.get_or_create(
+            product=self,
+            location=warehouse,
+            defaults={"quantity": self.quantity or 0},
+        )
 
     def __str__(self):
         return self.name
