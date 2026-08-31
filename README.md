@@ -5,7 +5,9 @@ It handles **products, categories, units and product variants** out of the box.
 
 > You don't need to know Python to run this. One script does everything.
 
+
 ---
+## live at -- https://ims-r9e5.onrender.com/swagger/
 ## Manual Setup (if you prefer)
 
 ```bash
