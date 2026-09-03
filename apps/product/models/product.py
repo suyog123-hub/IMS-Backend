@@ -11,7 +11,7 @@ from django.core.validators import MinValueValidator
 class Product(TimeStampedModel):
     category = models.ForeignKey(
         Category,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="products",
     )
     name = models.CharField(
