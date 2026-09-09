@@ -1,0 +1,62 @@
+# .github/workflows/ci.yml
+# Simple GitHub Actions CI workflow for this Django IMS Backend
+# If your git root is the `ims/` folder (where manage.py lives), use this copy.
+# If your git root is one level above (`ims-backend/`), the other copy at ../.github/workflows/ci.yml will be used.
+# GitHub only runs the file at <git-root>/.github/workflows/*.yml
+
+name: Django CI  # Name shown in GitHub Actions tab
+
+on:  # Events that trigger this workflow
+  push:  # Run on push
+    branches: [ "main", "master" ]  # Only when pushing to main/master branch
+  pull_request:  # Run on pull requests
+    branches: [ "main", "master" ]  # Only for PRs targeting main/master
+  workflow_dispatch:  # Allows manual run from GitHub UI (Actions -> Run workflow)
+
+jobs:  # One or more jobs to run
+  test:  # Job ID
+    runs-on: ubuntu-latest  # Runner OS - latest Ubuntu VM provided by GitHub
+
+    steps:  # Ordered list of steps executed sequentially
+
+      # Step 1: Get your repository code onto the runner
+      - name: Checkout code  # Human-readable step name
+        uses: actions/checkout@v4  # Official action: clones repo to $GITHUB_WORKSPACE
+
+      # Step 2: Install Python (version from runtime.txt = 3.12.13)
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5  # Official action to install Python
+        with:  # Inputs for setup-python
+          python-version: "3.12"  # Match runtime.txt
+          cache: "pip"  # Enable pip caching
+          cache-dependency-path: requirements.txt  # File to hash for cache (here at root)
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |  # Multi-line shell script
+          python -m pip install --upgrade pip  # Upgrade pip
+          pip install -r requirements.txt  # Install from requirements.txt at ims/ root
+          pip install flake8  # Linter (optional)
+
+      # Step 4: Lint
+      - name: Lint with flake8
+        run: |  # Shell script
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics  # Fail on syntax errors
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics  # Warn on style
+
+      # Step 5: Run Django checks
+      - name: Run migrations and tests
+        env:  # Env vars needed by ims/settings.py (decouple.config)
+          SECRET_KEY: django-insecure-ci-secret-key  # Dummy key for CI
+          DEBUG: "True"  # Enable debug
+          ALLOWED_HOSTS: "*"  # Allow any host
+          DATABASE_URL: ""  # Empty -> use sqlite (no Postgres needed)
+        run: |  # Shell script
+          python manage.py check  # Validate Django setup
+          python manage.py migrate --noinput  # Create tables
+          python manage.py test --verbosity=2  # Run tests
+          python manage.py collectstatic --noinput  # Verify static collection
+
+      # Step 6: Smoke test
+      - name: Check gunicorn import
+        run: python -c "import gunicorn; print(gunicorn.__version__)"  # Verify gunicorn
