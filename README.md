@@ -25,8 +25,8 @@ python manage.py runserver
 ## Quick Start (one command)
 
 ```bash
-git clone https://github.com/suyog123-hub/Inventory-management-system.git
-cd Inventory-management-system
+git clone https://github.com/suyog123-hub/IMS-Backend.git
+cd IMS-Backend
 ./setup.sh
 ```
 
@@ -150,4 +150,4 @@ Thanks to our contributors — this project is built collaboratively:
 
 ---
 
-*Last updated: 2026-09-18 — docs: fix clone URL and add contributors*
+*Last updated: 2026-09-19 — docs: correct clone URL to IMS-Backend*
