@@ -20,18 +20,15 @@ from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from django.urls import re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-...
-
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="IMS API",
       default_version='v1',
-      description="Test description",
+      description="Inventory Management System API - products, categories, units, variants and stock.",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="contact@snippets.local"),
       license=openapi.License(name="BSD License"),
