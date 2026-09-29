@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import dj_database_url
 from django.templatetags.static import static
 from django.urls import reverse_lazy
 from django.utils.functional import SimpleLazyObject
